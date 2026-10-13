@@ -367,6 +367,12 @@ export async function serve() {
       index = index.replaceAll(/<link[^>]*rel="apple-touch-icon"[^>]*>/g, '')
     }
 
+    // load an optional custom.js first in <head>, ahead of the Content-Security-Policy meta tag added at build
+    // and of <base>, so it gets an absolute path and only has to satisfy the script-src 'self' header
+    if (brandingFiles.includes('custom.js')) {
+      index = index.replace('<head>', `<head><script src="${basePath()}/custom.js"></script>`)
+    }
+
     return index
   }
 
